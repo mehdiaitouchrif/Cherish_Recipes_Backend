@@ -1,0 +1,31 @@
+{
+	"name": "cherish_recipes",
+	"version": "1.0.0",
+	"description": "Recipes web application for cooks to share their recipes and expertise with people, including ingredients and cooking steps.",
+	"main": "server.js",
+	"type": "module",
+	"scripts": {
+		"start": "node server.js",
+		"server": "nodemon server.js"
+	},
+	"keywords": [
+		"Recipes",
+		"Cooking",
+		"Meals",
+		"Chefs"
+	],
+	"author": "Mehdi Ait Ouchrif",
+	"license": "MIT",
+	"dependencies": {
+		"bcryptjs": "^2.4.3",
+		"dotenv": "^8.2.0",
+		"express": "^4.17.1",
+		"jsonwebtoken": "^8.5.1",
+		"mongoose": "^5.11.13"
+	},
+	"devDependencies": {
+		"colors": "^1.4.0",
+		"morgan": "^1.10.0",
+		"nodemon": "^2.0.7"
+	}
+}
