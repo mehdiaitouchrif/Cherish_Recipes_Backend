@@ -14,11 +14,12 @@ const recipeSchema = mongoose.Schema(
 		description: {
 			type: String,
 			required: [true, 'Please give the recipe a description'],
-			maxlength: [300, 'Description can not be more than 300 characters'],
+			maxlength: [500, 'Description can not be more than 500 characters'],
 		},
 		images: {
 			type: [String],
 			required: [true, 'Please add at least 1 image'],
+			default: ['/images/no-image.jpg'],
 		},
 		cuisine: {
 			type: String,
@@ -33,8 +34,9 @@ const recipeSchema = mongoose.Schema(
 				'India',
 				'Turkey',
 				'Spain',
-				' Mexico',
+				'Mexico',
 				'Morocco',
+				'Chinese',
 			],
 		},
 		level: {
@@ -56,6 +58,11 @@ const recipeSchema = mongoose.Schema(
 				true,
 				'Please add the appropriate ingredients for this recipe',
 			],
+		},
+		groups: {
+			type: [String],
+			required: [true, 'Please add an appropriate group for you recipe'],
+			enum: ['fruits', 'vegetables', 'grains', 'protein foods', 'dairy'],
 		},
 		steps: {
 			type: [String],
