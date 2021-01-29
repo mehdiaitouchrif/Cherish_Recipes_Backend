@@ -1,6 +1,7 @@
 import mongoose from 'mongoose'
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
+import crypto from 'crypto'
 
 const userSchema = mongoose.Schema(
 	{
@@ -79,6 +80,36 @@ userSchema.methods.getSignedJwtToken = function () {
 // Match Passwords
 userSchema.methods.matchPasswords = async function (enteredPassword) {
 	return await bcrypt.compare(enteredPassword, this.password)
+}
+
+// Generate and hash password reset token
+userSchema.methods.getResetPasswordToken = function () {
+	// Generate token
+	const resetToken = crypto.randomBytes(20).toString('hex')
+
+	// Hash token
+	this.resetPasswordToken = crypto
+		.createHash('sha256')
+		.update(resetToken)
+		.digest('hex')
+
+	// Set exipre
+	this.resetPasswordExpire = Date.now() + 1000 * 60 * 15
+
+	return resetToken
+}
+
+userSchema.methods.getConfirmEmailToken = function () {
+	// Generate token
+	const confirmationToken = crypto.randomBytes(20).toString('hex')
+
+	// Hash it
+	this.confirmEmailToken = crypto
+		.createHash('sha256')
+		.update(confirmationToken)
+		.digest('hex')
+
+	return confirmationToken
 }
 
 // Create model
