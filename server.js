@@ -3,6 +3,7 @@ import dotenv from 'dotenv'
 import colors from 'colors'
 import morgan from 'morgan'
 import connectDB from './database/db.js'
+import cookieParser from 'cookie-parser'
 import errorHandler from './middleweare/errorHandler.js'
 
 // Env config
@@ -17,6 +18,9 @@ import authRoutes from './routes/authRoutes.js'
 // Express setup
 const app = express()
 app.use(express.json())
+
+// Cookie parser
+app.use(cookieParser())
 
 if (process.env.NODE_ENV === 'development') {
 	app.use(morgan('dev'))
