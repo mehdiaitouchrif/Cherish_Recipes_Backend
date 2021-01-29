@@ -112,6 +112,11 @@ userSchema.methods.getConfirmEmailToken = function () {
 	return confirmationToken
 }
 
+// Cascade delete recipes when a user is deleted
+userSchema.pre('remove', async function () {
+	await this.model('Recipe').deleteMany({ user: this._id })
+})
+
 // Create model
 const User = mongoose.model('User', userSchema)
 
