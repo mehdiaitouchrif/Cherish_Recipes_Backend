@@ -14,7 +14,12 @@ import {
 } from '../controllers/authController.js'
 import requireAuth from '../middleweare/requireAuth.js'
 
+// Include recipe router
+import recipeRouter from './recipeRoutes.js'
 const router = express.Router()
+
+// Re-route to recipes
+router.use('/:userId/recipes', recipeRouter)
 
 router.post('/signup', signUp)
 router.post('/signin', signIn)
