@@ -14,6 +14,7 @@ connectDB()
 
 // Route files
 import authRoutes from './routes/authRoutes.js'
+import recipeRoutes from './routes/recipeRoutes.js'
 
 // Express setup
 const app = express()
@@ -28,6 +29,7 @@ if (process.env.NODE_ENV === 'development') {
 
 // Mount routers
 app.use('/api/v1/auth', authRoutes)
+app.use('/api/v1/recipes', recipeRoutes)
 
 // Custom error middleweare
 app.use(errorHandler)
