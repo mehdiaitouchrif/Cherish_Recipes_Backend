@@ -38,6 +38,8 @@ npm run server
 ```
 
 ```
+Run in prod mode
+```
 
 ## Demo
 
@@ -58,4 +60,3 @@ Mehdi Ait Ouchrif
 ### Licence
 
 This project is licenced under the MIT License
-```
