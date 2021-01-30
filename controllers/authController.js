@@ -124,6 +124,7 @@ export const updateDetails = asyncHandler(async (req, res, next) => {
 	user.firstName = req.body.firstName || user.firstName
 	user.lastName = req.body.lastName || user.lastName
 	user.email = req.body.email || user.email
+	user.photo = req.body.photo || user.photo
 
 	const updatedUser = await user.save()
 	res.json({
