@@ -77,6 +77,29 @@ const recipeSchema = mongoose.Schema(
 	{ timestamps: true }
 )
 
+recipeSchema.statics.getAverageRating = async function (userId) {
+	const obj = await this.aggregate([
+		{ $match: { user: userId } },
+		{ $group: { _id: '$user', averageRating: { $avg: '$averageRating' } } },
+	])
+
+	try {
+		await this.model('User').findByIdAndUpdate(userId, {
+			averageRating: obj[0].averageRating,
+		})
+	} catch (error) {
+		console.error(error)
+	}
+}
+
+recipeSchema.post('save', function () {
+	this.constructor.getAverageRating(this.user)
+})
+
+recipeSchema.pre('remove', function () {
+	this.constructor.getAverageRating(this.user)
+})
+
 const Recipe = mongoose.model('Recipe', recipeSchema)
 
 export default Recipe
