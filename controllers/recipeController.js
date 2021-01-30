@@ -6,22 +6,88 @@ import ErrorResponse from '../utils/errorResponse.js'
 // GET /api/v1/recipes | Public
 // GET /api/v1/auth/:userId/recipes
 export const getRecipes = asyncHandler(async (req, res) => {
+	/////////// Filters & Pagination /////////
+	// 1. Filtering
+	let query
+	const reqQuery = { ...req.query }
+
+	// Fields to exclude
+	const excludedFields = ['select', 'sort', 'page', 'limit', 'search']
+	excludedFields.forEach((field) => delete reqQuery[field])
+
+	let queryStr = JSON.stringify(reqQuery)
+	queryStr = queryStr.replace(/\b(gt|gte|lt|lte|in)\b/g, (match) => `$${match}`)
+
+	// 2. Searching
+	let search = {}
+	if (req.query.search) {
+		search = {
+			name: {
+				$regex: req.query.search,
+				$options: 'i',
+			},
+		}
+	}
+
+	// Execute
+	query = Recipe.find({ ...JSON.parse(queryStr), ...search })
+
+	// 3. Selecting
+	if (req.query.select) {
+		const fields = req.query.select.split(',').join(' ')
+		query = query.select(fields)
+	}
+
+	// 4. Sorting
+	if (req.query.sort) {
+		const sortBy = req.query.sort.split(',').join(' ')
+		query = query.sort(sortBy)
+	} else {
+		query = query.sort('-createdAt')
+	}
+
+	// 5. Pagination
+	const pageNumber = Number(req.query.page) || 1
+	const pageSize = Number(req.query.limit) || 2
+	const skip = (pageNumber - 1) * pageSize
+	const count = await Recipe.countDocuments({ ...search })
+
+	query = query.skip(skip).limit(pageSize)
+
+	// Pagination result
+	const paginationObj = {
+		page: pageNumber,
+		pages: Math.ceil(count / pageSize),
+	}
+
+	if (pageNumber * pageSize < count) {
+		paginationObj.nextPage = pageNumber + 1
+	}
+
+	if (skip > 0) {
+		paginationObj.previousPage = pageNumber - 1
+	}
+
+	////// Filter & Pagination End /////////
+
 	if (req.params.userId) {
-		const recipes = await Recipe.find({ user: req.params.userId })
+		const recipes = await Recipe.find({
+			user: req.params.userId,
+			...JSON.parse(queryStr),
+		})
 		res.status(200).json({
 			success: true,
 			count: recipes.length,
+			pagination: paginationObj,
 			data: recipes,
 		})
 	} else {
-		const recipes = await Recipe.find({}).populate(
-			'user',
-			'firstName lastName photo'
-		)
+		const recipes = await query.populate('user', 'firstName lastName photo')
 
 		res.json({
 			success: true,
 			count: recipes.length,
+			pagination: paginationObj,
 			data: recipes,
 		})
 	}
