@@ -37,12 +37,6 @@ const userSchema = mongoose.Schema(
 			required: true,
 			default: '/images/user.jpg',
 		},
-		favoriteRecipes: [
-			{
-				type: mongoose.Schema.Types.ObjectId,
-				ref: 'Recipe',
-			},
-		],
 		resetPasswordToken: String,
 		resetPasswordExpire: Date,
 		confirmEmailToken: String,
