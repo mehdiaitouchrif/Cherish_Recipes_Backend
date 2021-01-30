@@ -37,9 +37,7 @@ Run in dev mode
 npm run server
 ```
 
-```
-Run in prod mode
-```
+---
 
 ## Demo
 
