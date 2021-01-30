@@ -5,6 +5,7 @@ import {
 	getRecipe,
 	getRecipes,
 	updateRecipe,
+	addToFavorites,
 } from '../controllers/recipeController.js'
 import requireAuth from '../middleweare/requireAuth.js'
 
@@ -14,6 +15,7 @@ import reviewRouter from './reviewRoutes.js'
 router.use('/:recipeId/reviews', reviewRouter)
 
 router.route('/').post(requireAuth, createRecipe).get(getRecipes)
+router.put('/favorites/:recipeId', requireAuth, addToFavorites)
 router
 	.route('/:id')
 	.get(getRecipe)
