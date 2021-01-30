@@ -10,6 +10,9 @@ import requireAuth from '../middleweare/requireAuth.js'
 
 const router = express.Router({ mergeParams: true })
 
+import reviewRouter from './reviewRoutes.js'
+router.use('/:recipeId/reviews', reviewRouter)
+
 router.route('/').post(requireAuth, createRecipe).get(getRecipes)
 router
 	.route('/:id')
