@@ -1,3 +1,4 @@
+import path from 'path'
 import express from 'express'
 import dotenv from 'dotenv'
 import colors from 'colors'
@@ -16,10 +17,14 @@ connectDB()
 import authRoutes from './routes/authRoutes.js'
 import recipeRoutes from './routes/recipeRoutes.js'
 import reviewRoutes from './routes/reviewRoutes.js'
+import uploadRoutes from './routes/uploadRoutes.js'
 
 // Express setup
 const app = express()
 app.use(express.json())
+
+const __dirname = path.resolve()
+app.use('/uploads', express.static(path.join(__dirname, '/uploads')))
 
 // Cookie parser
 app.use(cookieParser())
@@ -32,6 +37,7 @@ if (process.env.NODE_ENV === 'development') {
 app.use('/api/v1/auth', authRoutes)
 app.use('/api/v1/recipes', recipeRoutes)
 app.use('/api/v1/reviews', reviewRoutes)
+app.use('/api/v1/upload', uploadRoutes)
 
 // Custom error middleweare
 app.use(errorHandler)
