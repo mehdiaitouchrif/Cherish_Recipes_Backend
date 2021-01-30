@@ -3,6 +3,12 @@ import express from 'express'
 import dotenv from 'dotenv'
 import colors from 'colors'
 import morgan from 'morgan'
+import expressMongoSanitize from 'express-mongo-sanitize'
+import helmet from 'helmet'
+import xss from 'xss-clean'
+import rateLimit from 'express-rate-limit'
+import hpp from 'hpp'
+import cors from 'cors'
 import connectDB from './database/db.js'
 import cookieParser from 'cookie-parser'
 import errorHandler from './middleweare/errorHandler.js'
@@ -32,6 +38,29 @@ app.use(cookieParser())
 if (process.env.NODE_ENV === 'development') {
 	app.use(morgan('dev'))
 }
+
+// Sanitize data
+app.use(expressMongoSanitize())
+
+// Set security header
+app.use(helmet())
+
+// Prevent XSS attacks
+app.use(xss())
+
+// Allow cross-origin requests
+app.use(cors())
+
+// Rate limit
+const limiter = rateLimit({
+	windowMs: 10 * 60 * 1000,
+	max: 200,
+})
+
+app.use(limiter)
+
+// Prevent http param pollution
+app.use(hpp())
 
 // Mount routers
 app.use('/api/v1/auth', authRoutes)
