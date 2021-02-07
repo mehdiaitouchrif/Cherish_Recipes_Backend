@@ -100,6 +100,10 @@ recipeSchema.pre('remove', function () {
 	this.constructor.getAverageRating(this.user)
 })
 
+// Cascade delete reviews when a recipe is deleted
+recipeSchema.pre('remove', async function () {
+	await this.model('Review').deleteMany({ recipe: this._id })
+})
 const Recipe = mongoose.model('Recipe', recipeSchema)
 
 export default Recipe
