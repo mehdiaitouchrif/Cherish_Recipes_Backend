@@ -48,7 +48,7 @@ export const getRecipes = asyncHandler(async (req, res) => {
 
 	// 5. Pagination
 	const pageNumber = Number(req.query.page) || 1
-	const pageSize = Number(req.query.limit) || 2
+	const pageSize = Number(req.query.limit) || 20
 	const skip = (pageNumber - 1) * pageSize
 	const count = await Recipe.countDocuments({ ...search })
 
@@ -96,7 +96,10 @@ export const getRecipes = asyncHandler(async (req, res) => {
 // List single recipe
 // GET /api/v1/recipes/:id | Public
 export const getRecipe = asyncHandler(async (req, res, next) => {
-	const recipe = await Recipe.findById(req.params.id)
+	const recipe = await Recipe.findById(req.params.id).populate(
+		'user',
+		'firstName lastName photo'
+	)
 
 	if (recipe) {
 		res.json({
@@ -112,6 +115,7 @@ export const getRecipe = asyncHandler(async (req, res, next) => {
 // POST /api/v1/recipes | Require Auth
 export const createRecipe = asyncHandler(async (req, res) => {
 	req.body.user = req.user._id
+	console.log(req.file)
 	const recipe = await Recipe.create(req.body)
 
 	res.status(201).json({
