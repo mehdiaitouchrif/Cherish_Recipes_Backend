@@ -2,7 +2,7 @@
 
 > Recipes for everybody. Let's cook!
 
-This a Node.js API build with Express & MongoDB. It is a recipe web application for cooks to share their recipes and expertise with everybody on the world.
+This a Node.js API build with Express & MongoDB. It is a recipe web application for cooks to share their recipes and expertise with everybody in the world.
 
 # Quick Start 🚀
 
